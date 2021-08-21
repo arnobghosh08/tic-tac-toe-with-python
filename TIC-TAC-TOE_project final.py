@@ -1,3 +1,6 @@
+# TEAM-2_CHALLENGE-2
+
+# IMPORT
 
 from turtle import color
 import pygame, sys
@@ -17,6 +20,9 @@ SQUARE_SIZE=WIDTH//BOARD_COLUMNS
 CIRCLE_RADIUS= WIDTH//10
 CIRCLE_WIDTH=15
 CROSS_WIDTH= 25
+
+#COLORS
+
 BG_COLOR= (28,170,156)
 LINE_COLOR=(23,145,135)
 CIRCLE_COLOR=(239, 231, 200)
@@ -24,25 +30,32 @@ TEXT_COLOR= (236, 42,23)
 CROSS_COLOR= (66,66,66)
 SPACE= SQUARE_SIZE//4
 
+# GAME SCREEN
 
 screen = pygame.display.set_mode( (WIDTH,HEIGHT) )
 pygame.display.set_caption('TIC-TAC-TOE')
 screen.fill (BG_COLOR)
 
+#CONSOLE
+
 board = np.zeros( (BOARD_ROWS, BOARD_COLUMNS) )
 print(board)
 
-
+# LINES
 
 def draw_lines():
-    #HORIZONTAL LINES
+    
+    # 2 HORIZONTAL LINES
     pygame.draw.line( screen, LINE_COLOR, (0,SQUARE_SIZE), (WIDTH,SQUARE_SIZE), LINE_WIDTH )
     pygame.draw.line( screen, LINE_COLOR, (0,2*SQUARE_SIZE), (WIDTH,2*SQUARE_SIZE), LINE_WIDTH )
-    #VERTICAL LINES
+    # 2 VERTICAL LINES
     pygame.draw.line(screen, LINE_COLOR, (SQUARE_SIZE,0), (SQUARE_SIZE,HEIGHT), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (2*SQUARE_SIZE,0), (2*SQUARE_SIZE,HEIGHT), LINE_WIDTH)
 
+# FIGURES (X AND O)
+
 def draw_figures():
+   
     for row in range(BOARD_ROWS):
         for column in range(BOARD_COLUMNS):
             if board[row][column]== 1:
@@ -51,19 +64,21 @@ def draw_figures():
                 pygame.draw.line( screen, CROSS_COLOR, (column* SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SQUARE_SIZE- SPACE), (column * SQUARE_SIZE + SQUARE_SIZE//2 + SPACE, row * SQUARE_SIZE + SPACE), CROSS_WIDTH )
                 pygame.draw.line( screen, CROSS_COLOR, (column* SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SPACE), (column * SQUARE_SIZE + SQUARE_SIZE - SPACE, row * SQUARE_SIZE + SQUARE_SIZE- SPACE), CROSS_WIDTH )
 
-
+# MARK SQUARES (THESE ARE USED TO MARK THE SQUARES SELECTED BY PLAYERS )
+                
 def mark_square(row, column, player):
     board[row][column]= player
 
-#Available squares
+# AVAILABLE SQUARES (USED TO CHECK IF A SQUARE IS AVAILABLE )
+
 def available_square(row, column):
     return board[row][column]== 0
-# These two lines are equivalent to finding 'True' or 'False' for whether a square is available using if and else if
+
 
 #To find out if a square is available(suppose, the middle one), type-   print( available_square(1,1) )
 
 def board_is_full():
-    
+    # FIRST LOOP THROUGH ALL THE ROWS. SECOND LOOP THROUGH ALL THE COLUMNS
     for row in range(BOARD_ROWS):
         for column in range(BOARD_COLUMNS):
             if board[row][column] ==0:
@@ -72,37 +87,36 @@ def board_is_full():
    
                    
                  
-                               
-        
-
-
-# check winning conditions
+# CHECK WINNING CONDITIONS
 
 def check_win (player):
-    #vertical win check
+    
+    # VERTICAL WIN CHECK
     for column in range(BOARD_COLUMNS):
         if board[0][column]==player and board[1][column]==player and board[2][column]==player:
             draw_vertical_winning_line (column, player)
             return True
-    #horizontal win check
+    # HORIZONTAL WIN CHECK
     for row in range(BOARD_ROWS):
         if board[row][0]==player and board[row][1]==player and board[row][2]==player:
           draw_horizontal_winning_line(row, player)
           return True
-    #ascending diagonal win check
+    # ASCENDING DIAGONAL WIN CHECK
     if board[2][0]==player and board[1][1]==player and board[0][2]==player:
        draw_asc_diagonal(player)
        return True
-    #descending diagonal win check
+    # DESCENDING DIAGONAL WIN CHECK
     if board[0][0]==player and board[1][1]== player and board[2][2]==player:
        draw_desc_diagonal(player)
        return True
     
     return False
 
+# WINNING LINES
+
 def draw_vertical_winning_line (column, player):
     posX=column * SQUARE_SIZE + SQUARE_SIZE//2
-
+    # CO-ORDINATES OF VERTICAL WINNING LINE
     if player==1:
         color = CIRCLE_COLOR
     elif player==2:
@@ -138,7 +152,8 @@ def draw_desc_diagonal(player):
 
     pygame.draw.line(screen, color, (15,15), (WIDTH-15,HEIGHT-15), LINE_WIDTH)
 
-
+# RESTART FUNCTION (TO RESTART THE GAME)    
+    
 def restart():
     screen.fill(BG_COLOR)
     draw_lines()
@@ -146,16 +161,13 @@ def restart():
         for column in range(BOARD_COLUMNS):
             board[row][column]=0
 
+
+# QUIT FUNCTION (TO QUIT THE GAME)            
 def quit():
     event.type==pygame.QUIT
     pygame.quit()
     sys.quit()
 
-    
-
-
-
-#to check if it is working, mark all squares and see.
             
 
 draw_lines()
@@ -163,7 +175,8 @@ draw_lines()
 player = 1
 game_over= False
 
-#main loop
+# MAIN LOOP
+
 while True:
     for event in pygame.event.get():
         
@@ -195,7 +208,7 @@ while True:
                     player = 2
 
                             
-                 # Now, we are switching to player 2. 
+                 # NOW, WE ARE SWITCHING TO PLAYER-2 
                 
                 elif player==2:
                     mark_square( clicked_row, clicked_column, 2 )     
@@ -207,8 +220,9 @@ while True:
                       
                     
                     player = 1
-                     # Now, we are switching back to player 1. This way, we can keep switching between the variables.  
+                     # NOW, WE ARE SWITCHING BACK TO PLAYER-1. IN THIS WAY, WE CAN KEEP SWITCHING BETWEEN THE PLAYERS AFTER A MOVE.
                 
+                               # WHAT HAPPENS IF THE BOARD IS FULL? 3 POSSIBILITIES-
                 if  board_is_full(): 
                    game_over= True
                    font=pygame.font.SysFont(None,40)
@@ -219,7 +233,7 @@ while True:
                 
                 draw_figures()
 
-                
+        # ASSIGNING KEYS FOR RESTARTING AND QUITTING THE GAME         
                
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_r:
@@ -227,11 +241,13 @@ while True:
                 player=1
                 game_over=False
 
-           
+           # NOW, IF WE PRESS 'r', THE GAME WILL RESTART FROM PLAYER-1 (AS ASSIGNED) AND THE GAME IS NOT OVER; IT'S JUST BEGINNING           
+
 
             if event.key==pygame.K_q:
                 quit()
         
+        # NOW, IF WE PRESS 'q', WE CAN QUIT THE GAME.
         
     pygame.display.update()
 
